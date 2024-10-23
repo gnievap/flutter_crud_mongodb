@@ -1,7 +1,7 @@
 class PetModel {
   final String id;
   final String name;
-  final int type;
+  final String type;
 
   PetModel({required this.id, required this.name, required this.type});
 
