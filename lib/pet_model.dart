@@ -1,7 +1,9 @@
+import 'package:mongo_dart/mongo_dart.dart' as mongo;
+
 class PetModel {
-  final String id;
-  final String name;
-  final String type;
+  final mongo.ObjectId id;
+  String name;
+  String type;
 
   PetModel({required this.id, required this.name, required this.type});
 
@@ -14,10 +16,21 @@ class PetModel {
   }
 
   factory PetModel.fromJson(Map<String, dynamic> json) {
+    var id = json['_id'];
+    if (id is String) {
+      try {
+        id = mongo.ObjectId.fromHexString(id);
+      } catch (e) {
+        throw ArgumentError('Invalid ID format: $id');
+      }
+    } else if (id is! mongo.ObjectId) {
+      throw ArgumentError('Expected ObjectId, got: $id');
+    }
+
     return PetModel(
-      id: json['_id'],
-      name: json['name'],
-      type: json['type'],
+      id: id as mongo.ObjectId,
+      name: json['name'] as String,
+      type: json['type'] as String,
     );
   }
 }

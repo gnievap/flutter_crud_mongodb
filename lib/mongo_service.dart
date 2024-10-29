@@ -1,9 +1,9 @@
 import 'package:crud_mongodb/pet_model.dart';
-import 'package:mongo_dart/mongo_dart.dart';
+import 'package:mongo_dart/mongo_dart.dart' as mongo;
 
 class MongoService {
   static final MongoService _instance = MongoService._internal();
-  late Db _db;
+  late mongo.Db _db;
 
   MongoService._internal();
 
@@ -12,11 +12,11 @@ class MongoService {
   }
 
   Future<void> connect() async {
-    _db = await Db.create('mongodb+srv://gnieva:<db_password>@cluster0.1hqs0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0');
+    _db = await mongo.Db.create('mongodb+srv://gnieva:3uPFCkma68pxw9rF@cluster0.1hqs0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0');
     await _db.open();
   }
 
-  Db get db => _db;
+ // Db get db => _db;
 
   Future<void> insertPet(PetModel pet) async {
     var collection = _db.collection('pets');
@@ -32,13 +32,13 @@ class MongoService {
   Future<void> updatePet(PetModel pet) async {
     var collection = _db.collection('pets');
     await collection.updateOne(
-      where.eq('_id', pet.id),
-      modify.set('name', pet.name).set('type', pet.type),
+      mongo.where.eq('_id', pet.id),
+      mongo.modify.set('name', pet.name).set('type', pet.type),
     );
   }
 
-  Future<void> deletePet(String id) async {
+  Future<void> deletePet(mongo.ObjectId id) async {
     var collection = _db.collection('pets');
-    await collection.remove(where.eq('_id', id)); 
+    await collection.remove(mongo.where.eq('_id', id)); 
   }
 }
